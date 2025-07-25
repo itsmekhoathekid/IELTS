@@ -8,7 +8,7 @@ import tempfile
 import random
 
 # Kết nối MongoDB
-connect_string = 'mongodb://localhost:27017/'
+connect_string = st.secrets["MONGO_URI"]
 db_name = 'vocab_app'
 collection_name = 'dictionary'
 
