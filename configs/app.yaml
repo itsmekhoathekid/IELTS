@@ -1,0 +1,4 @@
+text_string: '/home/anhkhoa/IELTS/data/texts/test.txt'
+connect_string: 'mongodb://localhost:27017/'
+collection_name: 'dictionary'
+db_name: 'vocab_app'

@@ -1,19 +1,17 @@
 from pymongo import MongoClient
-
+from .database import Database
 
 class Construct:
-    def __init__(self, text_file, connect_string, collection_name, db_name):
+    def __init__(self, text_file, database, collection_name):
         self.text_file = text_file
-        self.client = MongoClient(connect_string)
+        self.db = database
         self.collection_name = collection_name
-        self.db_name = db_name
     
     def remove_whitespace(self, sentence):
         return ' '.join(sentence.split())
 
     def collection_exist(self):
-        db = self.client[self.db_name]
-        return self.collection_name in db.list_collection_names()
+        return self.db.collection_exist(self.collection_name)
 
     def check_format(self, sentence):
         if ':' not in sentence:
@@ -37,21 +35,22 @@ class Construct:
 
     def push_into_database(self):
         if not self.collection_exist():
-            db = self.client[self.db_name]
-            collection = db[self.collection_name]
-        else:
-            collection = self.client[self.db_name][self.collection_name]
+            raise ValueError(f"Collection '{self.collection_name}' does not exist in database '{self.db.db_name}'.")
 
         with open(self.text_file, 'r') as file:
             for line in file:
                 line = line.strip()
                 data_line = self.process(line)
-                collection.insert_one(data_line)
-        print(f"Data pushed into collection '{self.collection_name}' in database '{self.db_name}'.")
+                word = data_line['word']
+                if word in [doc['word'] for doc in self.db.find_documents(self.collection_name, {'word': word})]:
+                    print(f"Word '{word}' already exists in the collection. Skipping.")
+                    continue
+                else:
+                    self.check_format(line)
+                    print(f"Adding word '{word}' to the collection.")
+                    self.db.insert_document(self.collection_name, data_line)
 
     def print_collection(self):
-        db = self.client[self.db_name]
-        collection = db[self.collection_name]
-        print(f"Documents in collection '{self.collection_name}':")
-        for doc in collection.find():
-            print(doc)
+        if not self.collection_exist():
+            raise ValueError(f"Collection '{self.collection_name}' does not exist in database '{self.db.db_name}'.")
+        self.db.print_collection(self.collection_name)
