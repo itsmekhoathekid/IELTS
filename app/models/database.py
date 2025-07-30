@@ -31,3 +31,7 @@ class Database:
     def close(self):
         self.client.close()
         print("Database connection closed.")
+    
+    def get_num_line(self, collection_name):
+        collection = self.get_collection(collection_name)
+        return collection.count_documents({})

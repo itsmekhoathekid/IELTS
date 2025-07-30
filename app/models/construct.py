@@ -54,3 +54,8 @@ class Construct:
         if not self.collection_exist():
             raise ValueError(f"Collection '{self.collection_name}' does not exist in database '{self.db.db_name}'.")
         self.db.print_collection(self.collection_name)
+    
+    def get_num_line(self):
+        if not self.collection_exist():
+            raise ValueError(f"Collection '{self.collection_name}' does not exist in database '{self.db.db_name}'.")
+        return self.db.get_num_line(self.collection_name)

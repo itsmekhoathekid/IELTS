@@ -15,7 +15,7 @@ collection_name = 'dictionary'
 database = Database(connect_string, db_name)
 controller = Controller(database, collection_name)
 
-st.header("📤 Upload file txt để đẩy vào database")
+st.header(f"📤 Upload file txt để đẩy vào database (hiện có {database.get_num_line(collection_name)} từ)")
 
 uploaded_file = st.file_uploader("Chọn file .txt", type=["txt"])
 

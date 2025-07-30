@@ -12,5 +12,4 @@ database = Database(connect_string, db_name)
 controller = Controller(database, collection_name)
 
 
-docs, indices = controller.get_random_documents(5)
-print(f"Selected documents: {docs}")
+print("Num lines: ", database.get_num_line(collection_name))
